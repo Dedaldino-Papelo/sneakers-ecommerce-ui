@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,15 +19,26 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -44,6 +56,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier){
+    var searchText by rememberSaveable { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,9 +68,43 @@ fun HomeScreen(modifier: Modifier = Modifier){
                 .fillMaxSize()
                 .padding(horizontal = 18.dp)
         ) {
+            SearchBar(
+                value = searchText ,
+                onValueChange = { searchText = it },
+                modifier = Modifier
+            )
+            Spacer(modifier = Modifier.size(20.dp))
             CardImage()
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(
+    modifier: Modifier,
+    value: String,
+    onValueChange: (String) -> Unit
+){
+    TextField(
+        modifier = Modifier
+            .fillMaxWidth(),
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(text = "What are you looking for?")},
+        shape = RoundedCornerShape(50.dp),
+        colors = TextFieldDefaults.textFieldColors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
+        leadingIcon = {
+            Icon(
+                Icons.Default.Search,
+                contentDescription = null,
+                tint = Color.Gray
+            )
+        }
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -139,7 +187,7 @@ fun CardImage(modifier: Modifier = Modifier){
                    .padding(2.dp)
                    .clip(CircleShape)
                    .background(color)
-                   .size(16.dp)
+                   .size(10.dp)
            )
        }
     }
