@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Sneakers Store</string>
+
+    <string name="product_name1">Nike Pegasus</string>
+    <string name="product_name2">Nike Free Run 5.0</string>
+    <string name="product_name3">Nike Pegasus 39 Premium</string>
+    <string name="product_name4">Nike Pegasus 40 By You</string>
+
+    <string name="product_desc1">Womens\'s Road Running Shoes</string>
+    <string name="product_desc2">Womens\'s Road Running Shoes</string>
+    <string name="product_desc3">Womens\'s Road Running Shoes</string>
+    <string name="product_desc4">Womens\'s Road Running Shoes</string>
+
+    <string name="product_details">Product Details</string>
+
+    <string name="card_title1">New Collection</string>
+    <string name="card_description1">Discount 50% for the first transaction</string>
+
+    <string name="card_title2">Nike Pegasus</string>
+    <string name="card_description2">Discount 60% for the first transaction</string>
+
+    <string name="card_title3">Super Nike</string>
+    <string name="card_description3">Discount 45% for the first transaction</string>
+</resources>
