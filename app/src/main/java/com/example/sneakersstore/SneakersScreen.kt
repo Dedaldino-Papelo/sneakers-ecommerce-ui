@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sneakersstore.ui.screens.HomeScreen
+import com.example.sneakersstore.ui.screens.ProductDetailScreen
 
 enum class SneakersScreen(@StringRes val title: Int){
     Start(title = R.string.app_name),
@@ -31,6 +33,9 @@ enum class SneakersScreen(@StringRes val title: Int){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SneakersAppBar(
+    currentScreen: SneakersScreen,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
@@ -40,12 +45,21 @@ fun SneakersAppBar(
         ),
         modifier = modifier,
         navigationIcon = {
-                IconButton(onClick = {  }) {
+            if(!canNavigateBack) {
+                IconButton(onClick = { }) {
                     Icon(
                         imageVector = Icons.Filled.Menu,
                         contentDescription = null
                     )
                 }
+            } else {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = null
+                    )
+                }
+            }
         },
         actions = {
             IconButton(onClick = { /* do something */ }) {
@@ -61,13 +75,19 @@ fun SneakersAppBar(
 @Composable
 fun SneakersApp() {
     val navController = rememberNavController()
-    // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
+    val currentScreen = SneakersScreen.valueOf(
+        backStackEntry?.destination?.route ?: SneakersScreen.Start.name
+    )
 
     Scaffold(
         topBar = {
-            SneakersAppBar()
+            SneakersAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
+
+            )
         }
     ) { innerPadding ->
 
@@ -79,7 +99,12 @@ fun SneakersApp() {
                 .padding(innerPadding)
         ) {
             composable(route = SneakersScreen.Start.name) {
-                HomeScreen()
+                HomeScreen(
+                    onNextButtonClicked = { navController.navigate(SneakersScreen.Details.name) }
+                )
+            }
+            composable(route = SneakersScreen.Details.name){
+                ProductDetailScreen()
             }
         }
     }

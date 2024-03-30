@@ -61,7 +61,10 @@ import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 import kotlinx.coroutines.delay
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier){
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onNextButtonClicked: () -> Unit
+){
     var searchText by rememberSaveable { mutableStateOf("") }
 
     Column(
@@ -95,7 +98,9 @@ fun HomeScreen(modifier: Modifier = Modifier){
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.size(12.dp))
-            Products()
+            Products(
+                onclick = { onNextButtonClicked() }
+            )
         }
     }
 }
@@ -146,25 +151,37 @@ fun BrandItem(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun Products(modifier: Modifier = Modifier) {
+fun Products(
+    modifier: Modifier = Modifier,
+    onclick: () -> Unit
+) {
     val products = DataSource.products
     val chunkedProducts = products.chunked(2)
 
     Column(modifier = modifier) {
         chunkedProducts.forEach { rowOfProducts ->
-            ProductRow(products = rowOfProducts)
+            ProductRow(
+                products = rowOfProducts,
+                onCLick = { onclick() }
+            )
         }
     }
 }
 
 @Composable
-fun ProductRow(products: List<Product>) {
+fun ProductRow(
+    products: List<Product>,
+    onCLick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         products.forEach { product ->
-            ProductItem(product = product)
+            ProductItem(
+                product = product,
+                onCLick = { onCLick() }
+            )
         }
     }
 }
@@ -172,6 +189,7 @@ fun ProductRow(products: List<Product>) {
 @Composable
 fun ProductItem(
     product: Product,
+    onCLick: () -> Unit,
     modifier: Modifier = Modifier
 ){
     Column(
@@ -180,7 +198,7 @@ fun ProductItem(
             .width(180.dp)
     ) {
         Button(
-            onClick = { },
+            onClick = onCLick,
             shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.light_gray)
@@ -341,6 +359,6 @@ fun CardImage(modifier: Modifier = Modifier){
 @Composable
 fun HomeScreenPreview() {
     SneakersStoreTheme {
-        HomeScreen()
+        HomeScreen( onNextButtonClicked = {})
     }
 }
