@@ -89,6 +89,12 @@ fun HomeScreen(modifier: Modifier = Modifier){
             )
             Brands()
             Spacer(modifier = Modifier.size(20.dp))
+            SectionTitle(
+                title = R.string.section_title3,
+                link = R.string.section_title2 ,
+                modifier = Modifier
+            )
+            Spacer(modifier = Modifier.size(12.dp))
             Products()
         }
     }
