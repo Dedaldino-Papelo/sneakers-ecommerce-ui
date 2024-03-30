@@ -1,5 +1,6 @@
 package com.example.sneakersstore.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -29,6 +31,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,18 +42,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.sneakersstore.Data.DataStore
+import com.example.sneakersstore.Data.DataSource
 import com.example.sneakersstore.R
+import com.example.sneakersstore.models.Product
 import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 import kotlinx.coroutines.delay
 
@@ -59,12 +65,12 @@ fun HomeScreen(modifier: Modifier = Modifier){
     var searchText by rememberSaveable { mutableStateOf("") }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxSize()
                 .padding(horizontal = 18.dp)
         ) {
@@ -75,6 +81,136 @@ fun HomeScreen(modifier: Modifier = Modifier){
             )
             Spacer(modifier = Modifier.size(20.dp))
             CardImage()
+            Spacer(modifier = Modifier.size(20.dp))
+            SectionTitle(
+                title = R.string.section_title1,
+                link = R.string.section_title2 ,
+                modifier = Modifier
+            )
+            Brands()
+            Spacer(modifier = Modifier.size(20.dp))
+            Products()
+        }
+    }
+}
+
+@Composable
+fun SectionTitle(
+    @StringRes title:
+    Int, @StringRes
+    link:Int, modifier: Modifier
+){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+
+    ) {
+        Text(
+            text = stringResource(title),
+            style = MaterialTheme.typography.displayMedium
+        )
+        Text(text = stringResource(link))
+    }
+}
+
+@Composable
+fun Brands(modifier: Modifier = Modifier){
+   Row(
+       modifier = modifier
+           .fillMaxWidth()
+           .padding(vertical = 20.dp),
+       horizontalArrangement = Arrangement.SpaceBetween
+   ) {
+       BrandItem()
+       BrandItem()
+       BrandItem()
+       BrandItem()
+   }
+}
+
+@Composable
+fun BrandItem(modifier: Modifier = Modifier){
+    Box(
+        modifier = modifier
+            .size(70.dp)
+            .clip(CircleShape)
+            .background(Color.LightGray)
+    )
+}
+
+@Composable
+fun Products(modifier: Modifier = Modifier) {
+    val products = DataSource.products
+    val chunkedProducts = products.chunked(2)
+
+    Column(modifier = modifier) {
+        chunkedProducts.forEach { rowOfProducts ->
+            ProductRow(products = rowOfProducts)
+        }
+    }
+}
+
+@Composable
+fun ProductRow(products: List<Product>) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        products.forEach { product ->
+            ProductItem(product = product)
+        }
+    }
+}
+
+@Composable
+fun ProductItem(
+    product: Product,
+    modifier: Modifier = Modifier
+){
+    Column(
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .width(180.dp)
+    ) {
+        Button(
+            onClick = { },
+            shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.light_gray)
+            )
+        ){
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
+                IconButton(
+                    onClick = {},
+                    modifier = modifier
+                        .align(alignment = Alignment.End)
+                ) {
+                    Icon(
+                        Icons.Filled.Favorite,
+                        tint = Color.Red,
+                        contentDescription = null,
+                        modifier = modifier
+                            .size(25.dp)
+                    )
+                }
+                
+                Image(
+                    painter = painterResource(product.productImageRes),
+                    contentDescription = null,
+                    modifier = modifier
+                        .size(130.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Column {
+            Text(text = stringResource(id = product.productName))
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = String.format("%.1f", product.productPrice))
         }
     }
 }
@@ -87,7 +223,7 @@ fun SearchBar(
     onValueChange: (String) -> Unit
 ){
     TextField(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
@@ -111,7 +247,7 @@ fun SearchBar(
 @Composable
 fun CardImage(modifier: Modifier = Modifier){
 
-    val cards = DataStore.cards
+    val cards = DataSource.cards
     val pagerState = rememberPagerState(pageCount = {
         cards.size
     })
@@ -162,7 +298,7 @@ fun CardImage(modifier: Modifier = Modifier){
                             containerColor = colorResource(R.color.button_color)
                         )
                     ) {
-                        Text(text = "Shop Now")
+                        Text(text = stringResource(R.string.text_shop_button))
                     }
                 }
                 Image(
@@ -181,13 +317,13 @@ fun CardImage(modifier: Modifier = Modifier){
         horizontalArrangement = Arrangement.Center
     ) {
        repeat(pagerState.pageCount){ iteration ->
-            val color = if(pagerState.currentPage == iteration) Color(0xff373737) else Color(0xA83373737)
+            val color = if(pagerState.currentPage == iteration) MaterialTheme.colorScheme.primaryContainer else Color.LightGray
            Box(
                modifier = Modifier
                    .padding(2.dp)
                    .clip(CircleShape)
                    .background(color)
-                   .size(10.dp)
+                   .size(7.dp)
            )
        }
     }

@@ -6,6 +6,11 @@
     <string name="product_name3">Nike Pegasus 39 Premium</string>
     <string name="product_name4">Nike Pegasus 40 By You</string>
 
+    <string name="text_shop_button">Shop now</string>
+
+    <string name="section_title1">Brand</string>
+    <string name="section_title2">See All</string>
+
     <string name="product_desc1">Womens\'s Road Running Shoes</string>
     <string name="product_desc2">Womens\'s Road Running Shoes</string>
     <string name="product_desc3">Womens\'s Road Running Shoes</string>
