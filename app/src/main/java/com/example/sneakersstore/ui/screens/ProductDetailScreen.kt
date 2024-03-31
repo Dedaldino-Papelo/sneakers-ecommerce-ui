@@ -1,30 +1,34 @@
 package com.example.sneakersstore.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 
 @Composable
-fun ProductDetailScreen(){
+fun ProductDetailScreen(
+    detailsViewModel: DetailsViewModel = viewModel(),
+    modifier: Modifier = Modifier
+){
+
+    val detailsUiState by detailsViewModel.uiState.collectAsState()
+    Log.d("newId", detailsUiState.productId)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-        ){
-            items(4) {
-                Text(text = it.toString())
-            }
-        }
+       Column {
+           Text(text = "testando...")
+       }
     }
-
 }
 
 @Preview(showBackground = true)

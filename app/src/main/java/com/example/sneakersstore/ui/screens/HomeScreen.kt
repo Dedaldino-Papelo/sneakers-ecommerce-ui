@@ -62,9 +62,10 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
+    products: List<Product>,
+    onNextButtonClicked: (Product) -> Unit,
     modifier: Modifier = Modifier,
-    onNextButtonClicked: () -> Unit
-){
+) {
     var searchText by rememberSaveable { mutableStateOf("") }
 
     Column(
@@ -78,7 +79,7 @@ fun HomeScreen(
                 .padding(horizontal = 18.dp)
         ) {
             SearchBar(
-                value = searchText ,
+                value = searchText,
                 onValueChange = { searchText = it },
                 modifier = Modifier
             )
@@ -87,20 +88,35 @@ fun HomeScreen(
             Spacer(modifier = Modifier.size(20.dp))
             SectionTitle(
                 title = R.string.section_title1,
-                link = R.string.section_title2 ,
+                link = R.string.section_title2,
                 modifier = Modifier
             )
             Brands()
             Spacer(modifier = Modifier.size(20.dp))
             SectionTitle(
                 title = R.string.section_title3,
-                link = R.string.section_title2 ,
+                link = R.string.section_title2,
                 modifier = Modifier
             )
             Spacer(modifier = Modifier.size(12.dp))
-            Products(
-                onclick = { onNextButtonClicked() }
-            )
+
+            Column(modifier = modifier) {
+                val chunkedProducts = products.chunked(2)
+
+                chunkedProducts.forEach { products ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        products.forEach { product ->
+                            ProductItem(
+                                product = product,
+                                onCLick = { onNextButtonClicked(product) }
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -109,8 +125,8 @@ fun HomeScreen(
 fun SectionTitle(
     @StringRes title:
     Int, @StringRes
-    link:Int, modifier: Modifier
-){
+    link: Int, modifier: Modifier
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -126,22 +142,22 @@ fun SectionTitle(
 }
 
 @Composable
-fun Brands(modifier: Modifier = Modifier){
-   Row(
-       modifier = modifier
-           .fillMaxWidth()
-           .padding(vertical = 20.dp),
-       horizontalArrangement = Arrangement.SpaceBetween
-   ) {
-       BrandItem()
-       BrandItem()
-       BrandItem()
-       BrandItem()
-   }
+fun Brands(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 20.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        BrandItem()
+        BrandItem()
+        BrandItem()
+        BrandItem()
+    }
 }
 
 @Composable
-fun BrandItem(modifier: Modifier = Modifier){
+fun BrandItem(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(70.dp)
@@ -150,48 +166,13 @@ fun BrandItem(modifier: Modifier = Modifier){
     )
 }
 
-@Composable
-fun Products(
-    modifier: Modifier = Modifier,
-    onclick: () -> Unit
-) {
-    val products = DataSource.products
-    val chunkedProducts = products.chunked(2)
-
-    Column(modifier = modifier) {
-        chunkedProducts.forEach { rowOfProducts ->
-            ProductRow(
-                products = rowOfProducts,
-                onCLick = { onclick() }
-            )
-        }
-    }
-}
-
-@Composable
-fun ProductRow(
-    products: List<Product>,
-    onCLick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        products.forEach { product ->
-            ProductItem(
-                product = product,
-                onCLick = { onCLick() }
-            )
-        }
-    }
-}
 
 @Composable
 fun ProductItem(
     product: Product,
     onCLick: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     Column(
         modifier = modifier
             .padding(vertical = 8.dp)
@@ -203,7 +184,7 @@ fun ProductItem(
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.light_gray)
             )
-        ){
+        ) {
             Column(
                 modifier = modifier
                     .fillMaxSize()
@@ -221,7 +202,7 @@ fun ProductItem(
                             .size(25.dp)
                     )
                 }
-                
+
                 Image(
                     painter = painterResource(product.productImageRes),
                     contentDescription = null,
@@ -245,13 +226,13 @@ fun SearchBar(
     modifier: Modifier,
     value: String,
     onValueChange: (String) -> Unit
-){
+) {
     TextField(
         modifier = modifier
             .fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = "What are you looking for?")},
+        label = { Text(text = "What are you looking for?") },
         shape = RoundedCornerShape(50.dp),
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
@@ -269,20 +250,20 @@ fun SearchBar(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CardImage(modifier: Modifier = Modifier){
+fun CardImage(modifier: Modifier = Modifier) {
 
     val cards = DataSource.cards
     val pagerState = rememberPagerState(pageCount = {
         cards.size
     })
 
-   LaunchedEffect(Unit){
-        while (true){
+    LaunchedEffect(Unit) {
+        while (true) {
             delay(3000)
             val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
             pagerState.scrollToPage(nextPage)
         }
-   }
+    }
 
     Card(
         modifier = Modifier
@@ -292,46 +273,46 @@ fun CardImage(modifier: Modifier = Modifier){
             containerColor = colorResource(R.color.black),
         )
     ) {
-        HorizontalPager(state = pagerState) {currentPage ->
-                Column(
+        HorizontalPager(state = pagerState) { currentPage ->
+            Column(
+                modifier = Modifier
+                    .padding(start = 20.dp)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = cards[currentPage].title),
+                    color = colorResource(R.color.white),
+                    style = MaterialTheme.typography.displayMedium,
                     modifier = Modifier
-                        .padding(start = 20.dp)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = stringResource(id = cards[currentPage].title),
-                        color = colorResource(R.color.white),
-                        style = MaterialTheme.typography.displayMedium,
-                        modifier = Modifier
-                            .padding(bottom = 8.dp)
-                    )
-                    Text(
-                        text = stringResource(id = cards[currentPage].description),
-                        lineHeight = 20.sp,
-                        color = colorResource(R.color.gray),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier
-                            .width(120.dp)
-                    )
-                    Button(
-                        onClick = { },
-                        modifier = Modifier
-                            .padding(top = 10.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(R.color.button_color)
-                        )
-                    ) {
-                        Text(text = stringResource(R.string.text_shop_button))
-                    }
-                }
-                Image(
-                    modifier = Modifier
-                        .size(200.dp),
-                    painter = painterResource(id = cards[currentPage].imageRes),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                        .padding(bottom = 8.dp)
                 )
+                Text(
+                    text = stringResource(id = cards[currentPage].description),
+                    lineHeight = 20.sp,
+                    color = colorResource(R.color.gray),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .width(120.dp)
+                )
+                Button(
+                    onClick = { },
+                    modifier = Modifier
+                        .padding(top = 10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.button_color)
+                    )
+                ) {
+                    Text(text = stringResource(R.string.text_shop_button))
+                }
+            }
+            Image(
+                modifier = Modifier
+                    .size(200.dp),
+                painter = painterResource(id = cards[currentPage].imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+            )
         }
     }
 
@@ -340,25 +321,28 @@ fun CardImage(modifier: Modifier = Modifier){
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-       repeat(pagerState.pageCount){ iteration ->
-            val color = if(pagerState.currentPage == iteration) MaterialTheme.colorScheme.primaryContainer else Color.LightGray
-           Box(
-               modifier = Modifier
-                   .padding(2.dp)
-                   .clip(CircleShape)
-                   .background(color)
-                   .size(7.dp)
-           )
-       }
+        repeat(pagerState.pageCount) { iteration ->
+            val color =
+                if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primaryContainer else Color.LightGray
+            Box(
+                modifier = Modifier
+                    .padding(2.dp)
+                    .clip(CircleShape)
+                    .background(color)
+                    .size(7.dp)
+            )
+        }
     }
 }
-
 
 
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenPreview() {
     SneakersStoreTheme {
-        HomeScreen( onNextButtonClicked = {})
+        HomeScreen(
+            onNextButtonClicked = {},
+            products = DataSource.products
+        )
     }
 }

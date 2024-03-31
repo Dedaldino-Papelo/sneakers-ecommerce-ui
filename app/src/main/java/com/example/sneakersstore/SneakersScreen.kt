@@ -18,10 +18,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.sneakersstore.Data.DataSource
+import com.example.sneakersstore.ui.screens.DetailsViewModel
 import com.example.sneakersstore.ui.screens.HomeScreen
 import com.example.sneakersstore.ui.screens.ProductDetailScreen
 
@@ -33,7 +36,6 @@ enum class SneakersScreen(@StringRes val title: Int){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SneakersAppBar(
-    currentScreen: SneakersScreen,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -73,8 +75,9 @@ fun SneakersAppBar(
 }
 
 @Composable
-fun SneakersApp() {
+fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
     val navController = rememberNavController()
+
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = SneakersScreen.valueOf(
         backStackEntry?.destination?.route ?: SneakersScreen.Start.name
@@ -83,10 +86,8 @@ fun SneakersApp() {
     Scaffold(
         topBar = {
             SneakersAppBar(
-                currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
-
             )
         }
     ) { innerPadding ->
@@ -100,12 +101,16 @@ fun SneakersApp() {
         ) {
             composable(route = SneakersScreen.Start.name) {
                 HomeScreen(
-                    onNextButtonClicked = { navController.navigate(SneakersScreen.Details.name) }
+                    products = DataSource.products,
+                    onNextButtonClicked = {
+                        viewModel.getProductId(it.productId)
+                        navController.navigate("${SneakersScreen.Details.name}?${it.productId}")
+                    }
                 )
             }
-            composable(route = SneakersScreen.Details.name){
-                ProductDetailScreen()
+            composable("${SneakersScreen.Details.name}"){
+                    ProductDetailScreen()
+                }
             }
         }
-    }
 }
