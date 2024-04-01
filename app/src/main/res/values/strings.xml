@@ -27,4 +27,5 @@
 
     <string name="card_title3">Super Nike</string>
     <string name="card_description3">Discount 45% for the first transaction</string>
+    <string name="buy_now">buy now</string>
 </resources>
