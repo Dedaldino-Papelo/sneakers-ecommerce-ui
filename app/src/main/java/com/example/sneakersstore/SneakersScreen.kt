@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -91,6 +92,7 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
             )
         }
     ) { innerPadding ->
+        val uiState by viewModel.uiState.collectAsState()
 
         NavHost(
             navController = navController,
@@ -108,9 +110,14 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
                     }
                 )
             }
-            composable("${SneakersScreen.Details.name}"){
-                    ProductDetailScreen()
+            composable("${SneakersScreen.Details.name}") {
+                val product = DataSource.products.find { it -> it.productId == uiState.productId }
+                if (product != null) {
+                    ProductDetailScreen(
+                        product = product
+                    )
                 }
             }
         }
+    }
 }
