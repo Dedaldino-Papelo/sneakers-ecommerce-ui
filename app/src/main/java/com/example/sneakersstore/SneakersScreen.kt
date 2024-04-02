@@ -19,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -37,6 +38,7 @@ enum class SneakersScreen(@StringRes val title: Int){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SneakersAppBar(
+    currentScreen: SneakersScreen,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -44,7 +46,7 @@ fun SneakersAppBar(
     TopAppBar(
         title = { Text(text = "") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Color.Transparent
+            containerColor = if(currentScreen.title == R.string.product_details) colorResource(R.color.mid_gray) else Color.Transparent
         ),
         modifier = modifier,
         navigationIcon = {
@@ -65,13 +67,13 @@ fun SneakersAppBar(
             }
         },
         actions = {
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = { }) {
                 Icon(
                     imageVector = Icons.Filled.Notifications,
                     contentDescription = "Localized description"
                 )
             }
-        },
+        }
     )
 }
 
@@ -87,6 +89,7 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
     Scaffold(
         topBar = {
             SneakersAppBar(
+                currentScreen = currentScreen,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() }
             )
