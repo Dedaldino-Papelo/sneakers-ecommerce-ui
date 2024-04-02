@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -111,12 +112,69 @@ fun HomeScreen(
                         products.forEach { product ->
                             ProductItem(
                                 product = product,
-                                onCLick = { onNextButtonClicked(product) }
+                                onClick = { onNextButtonClicked(product) },
+                                onCheckedChange = { isFavorite ->
+                                    product.isFavorite.value = isFavorite
+                                }
                             )
                         }
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun ProductItem(
+    product: Product,
+    onClick: () -> Unit,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .padding(vertical = 8.dp)
+            .width(180.dp)
+    ) {
+        Button(
+            onClick = onClick,
+            shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = colorResource(R.color.light_gray)
+            )
+        ) {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+            ) {
+                IconButton(
+                    onClick = { onCheckedChange(!product.isFavorite.value) },
+                    modifier = modifier
+                        .align(alignment = Alignment.End)
+                ) {
+                    Icon(
+                        if(product.isFavorite.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                        tint = if(product.isFavorite.value) Color.Red else Color.Black,
+                        contentDescription = null,
+                        modifier = modifier
+                            .size(25.dp)
+                    )
+                }
+
+                Image(
+                    painter = painterResource(product.productImageRes),
+                    contentDescription = null,
+                    modifier = modifier
+                        .size(130.dp)
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(10.dp))
+        Column {
+            Text(text = stringResource(id = product.productName))
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(text = String.format("%.1f", product.productPrice))
         }
     }
 }
@@ -166,59 +224,6 @@ fun BrandItem(modifier: Modifier = Modifier) {
     )
 }
 
-
-@Composable
-fun ProductItem(
-    product: Product,
-    onCLick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .padding(vertical = 8.dp)
-            .width(180.dp)
-    ) {
-        Button(
-            onClick = onCLick,
-            shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.light_gray)
-            )
-        ) {
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-            ) {
-                IconButton(
-                    onClick = {},
-                    modifier = modifier
-                        .align(alignment = Alignment.End)
-                ) {
-                    Icon(
-                        Icons.Filled.Favorite,
-                        tint = Color.Red,
-                        contentDescription = null,
-                        modifier = modifier
-                            .size(25.dp)
-                    )
-                }
-
-                Image(
-                    painter = painterResource(product.productImageRes),
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(130.dp)
-                )
-            }
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        Column {
-            Text(text = stringResource(id = product.productName))
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(text = String.format("%.1f", product.productPrice))
-        }
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

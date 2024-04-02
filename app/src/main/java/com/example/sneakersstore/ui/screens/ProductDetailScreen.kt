@@ -1,5 +1,6 @@
 package com.example.sneakersstore.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,16 +82,21 @@ fun ProductDetailScreen(
     }
 }
 
+
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun ProductDetailScreenPreview () {
     SneakersStoreTheme {
         ProductDetailScreen(
-            Product("1",
+            Product(
+                "1",
                 R.drawable.nike_pegasus,
                 R.string.product_name1,
                 R.string.product_desc1,
-                7.2)
+                89.83,
+                mutableStateOf(false)
+            )
         )
     }
 }
