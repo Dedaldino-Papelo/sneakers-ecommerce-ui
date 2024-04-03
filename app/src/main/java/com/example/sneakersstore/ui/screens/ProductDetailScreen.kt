@@ -1,7 +1,6 @@
 package com.example.sneakersstore.ui.screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -62,13 +60,11 @@ fun ProductDetailScreen(
          }
     }
 
-    Log.d("imageRes", imageResource.toString())
-
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-       Column(
+       Box(
            modifier = modifier
                .fillMaxWidth()
                .height(300.dp)
@@ -76,7 +72,7 @@ fun ProductDetailScreen(
                    colorResource(R.color.mid_gray),
                    shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                ),
-           horizontalAlignment = Alignment.CenterHorizontally
+           contentAlignment = Alignment.Center
        ) {
            Image(
                painter = painterResource(id = imageResource) ,
@@ -90,7 +86,7 @@ fun ProductDetailScreen(
         ) {
 
             LazyRow(
-                contentPadding = PaddingValues(vertical = 20.dp),
+                contentPadding = PaddingValues(vertical = 25.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ){
                 items(product.parts){ part ->
@@ -104,14 +100,20 @@ fun ProductDetailScreen(
                 }
             }
 
-
-
-            Column {
-                Text(text = stringResource(id = product.productDesc))
-                Spacer(modifier = modifier.height(7.dp))
-                Text(text = stringResource(id = product.productName))
-                Spacer(modifier = modifier.height(7.dp))
-                Text(text = product.productPrice.toString())
+            Column(
+                modifier = modifier
+            ) {
+                Text(
+                    text = stringResource(id = product.productDesc),
+                    modifier = modifier.padding(bottom = 12.dp)
+                )
+                Text(
+                    text = stringResource(id = product.productName),
+                    modifier = modifier.padding(bottom = 12.dp)
+                )
+                Text(
+                    text = product.productPrice.toString()
+                )
             }
 
             Column {
