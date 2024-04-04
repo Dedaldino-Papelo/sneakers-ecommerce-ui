@@ -7,7 +7,7 @@ import com.example.sneakersstore.models.Parts
 import com.example.sneakersstore.models.Product
 
 object DataSource {
-    val products = listOf(
+    val products = mutableListOf(
         Product(
             "1",
             R.drawable.nike_pegasus,

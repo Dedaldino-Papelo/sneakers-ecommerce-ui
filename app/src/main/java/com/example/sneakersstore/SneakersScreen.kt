@@ -101,7 +101,7 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
 
         NavHost(
             navController = navController,
-            startDestination = SneakersScreen.Summary.name,
+            startDestination = SneakersScreen.Start.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)

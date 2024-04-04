@@ -23,15 +23,19 @@ class DetailsViewModel: ViewModel() {
 
     fun addToCart(product: Product) {
         _uiState.update {currentState ->
-            val newCart = if (currentState.cart.indexOf(product) == -1)
-                currentState.cart + product
-            else currentState.cart
+            val updatedCart = _uiState.value.cart.toMutableList()
+
+            val existingProduct  = currentState.cart.find { it -> it.productId == product.productId }
+            if(existingProduct != null) {
+                existingProduct.quantity++
+            } else {
+                updatedCart.add(product)
+            }
 
             currentState.copy(
-                cart = newCart
+                cart = updatedCart
             )
         }
-
         Log.d("cart", _uiState.value.cart.toString())
     }
 }
