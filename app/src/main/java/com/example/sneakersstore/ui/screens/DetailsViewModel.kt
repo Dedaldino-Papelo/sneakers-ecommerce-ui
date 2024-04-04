@@ -25,7 +25,7 @@ class DetailsViewModel: ViewModel() {
         _uiState.update {currentState ->
             val updatedCart = _uiState.value.cart.toMutableList()
 
-            val existingProduct  = currentState.cart.find { it -> it.productId == product.productId }
+            val existingProduct  = updatedCart.find { it -> it.productId == product.productId }
             if(existingProduct != null) {
                 existingProduct.quantity++
             } else {
