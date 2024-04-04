@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -34,100 +35,107 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sneakersstore.R
 import com.example.sneakersstore.models.Parts
 import com.example.sneakersstore.models.Product
 import com.example.sneakersstore.ui.theme.SneakersStoreTheme
+import java.text.NumberFormat
 
 @Composable
 fun ProductDetailScreen(
     product: Product,
     modifier: Modifier = Modifier
-){
+) {
     var items by rememberSaveable { mutableStateOf(listOf<Parts>()) }
     var imageResource: Int = product.productImageRes
 
-     if(items.isNotEmpty()){
-         items.forEach { item ->
-             imageResource = when(item.id){
-                 "1" -> item.image
-                 "2" -> item.image
-                 "3" -> item.image
-                 else -> product.productImageRes
-             }
-         }
+    if (items.isNotEmpty()) {
+        items.forEach { item ->
+            imageResource = when (item.id) {
+                "1" -> item.image
+                "2" -> item.image
+                "3" -> item.image
+                else -> product.productImageRes
+            }
+        }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-       Box(
-           modifier = modifier
-               .fillMaxWidth()
-               .height(300.dp)
-               .background(
-                   colorResource(R.color.mid_gray),
-                   shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
-               ),
-           contentAlignment = Alignment.Center
-       ) {
-           Image(
-               painter = painterResource(id = imageResource) ,
-               contentDescription = stringResource(id = product.productName ))
-       }
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(380.dp)
+                .background(
+                    colorResource(R.color.mid_gray),
+                    shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = imageResource),
+                contentDescription = stringResource(id = product.productName)
+            )
+        }
 
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-
-            LazyRow(
-                contentPadding = PaddingValues(vertical = 25.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ){
-                items(product.parts){ part ->
-                    PartItem(
-                        part = part,
-                        imageResource = imageResource,
-                        onClick = { item ->
-                            items = listOf(item)
-                        }
-                    )
-                }
-            }
-
             Column(
-                modifier = modifier
             ) {
-                Text(
-                    text = stringResource(id = product.productDesc),
-                    modifier = modifier.padding(bottom = 12.dp)
-                )
-                Text(
-                    text = stringResource(id = product.productName),
-                    modifier = modifier.padding(bottom = 12.dp)
-                )
-                Text(
-                    text = product.productPrice.toString()
-                )
+                LazyRow(
+                    contentPadding = PaddingValues(vertical = 25.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(product.parts) { part ->
+                        PartItem(
+                            part = part,
+                            imageResource = imageResource,
+                            onClick = { item ->
+                                items = listOf(item)
+                            }
+                        )
+                    }
+                }
+
+                Column(
+                    modifier = modifier
+                ) {
+                    Text(
+                        text = stringResource(id = product.productDesc),
+                        color = colorResource(R.color.gray),
+                        modifier = modifier.padding(bottom = 12.dp)
+                    )
+                    Text(
+                        text = stringResource(id = product.productName),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = modifier.padding(bottom = 12.dp)
+                    )
+                    Text(
+                        text = NumberFormat.getCurrencyInstance().format(product.productPrice),
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
 
-            Column {
-                Button(
-                    onClick = {},
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(5.dp)),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.button_color),
-                    )
-                ) {
-                    Text(text = stringResource(R.string.buy_now).uppercase())
-                }
+            Button(
+                onClick = {},
+                modifier = modifier
+                    .fillMaxWidth()
+                    .clip(shape = RoundedCornerShape(5.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(R.color.button_color),
+                )
+            ) {
+                Text(text = stringResource(R.string.buy_now).uppercase())
             }
         }
     }
@@ -148,7 +156,6 @@ fun PartItem(
             .border(
                 2.dp,
                 color = if (imageResource == part.image) colorResource(R.color.button_color) else Color.Transparent,
-                shape = RoundedCornerShape(8.dp)
             )
             .clickable {
                 onClick(part)
