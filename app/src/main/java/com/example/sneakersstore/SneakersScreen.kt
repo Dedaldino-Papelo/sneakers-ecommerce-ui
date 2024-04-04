@@ -28,11 +28,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.sneakersstore.Data.DataSource
 import com.example.sneakersstore.ui.screens.DetailsViewModel
 import com.example.sneakersstore.ui.screens.HomeScreen
+import com.example.sneakersstore.ui.screens.OrderSummaryScreen
 import com.example.sneakersstore.ui.screens.ProductDetailScreen
 
 enum class SneakersScreen(@StringRes val title: Int){
     Start(title = R.string.app_name),
-    Details(title = R.string.product_details)
+    Details(title = R.string.product_details),
+    Summary(title = R.string.order_summary)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +101,7 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
 
         NavHost(
             navController = navController,
-            startDestination = SneakersScreen.Start.name,
+            startDestination = SneakersScreen.Summary.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -117,9 +119,14 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
                 val product = DataSource.products.find { it -> it.productId == uiState.productId }
                 if (product != null) {
                     ProductDetailScreen(
-                        product = product
+                        product = product,
+                        onAddToCart = { viewModel.addToCart(it) }
                     )
                 }
+            }
+
+            composable(route = SneakersScreen.Summary.name){
+                OrderSummaryScreen()
             }
         }
     }

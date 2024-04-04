@@ -328,7 +328,7 @@ fun CardImage(modifier: Modifier = Modifier) {
     ) {
         repeat(pagerState.pageCount) { iteration ->
             val color =
-                if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primaryContainer else Color.LightGray
+                if (pagerState.currentPage == iteration) colorResource(R.color.button_color) else Color.LightGray
             Box(
                 modifier = Modifier
                     .padding(2.dp)

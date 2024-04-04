@@ -47,6 +47,7 @@ import java.text.NumberFormat
 @Composable
 fun ProductDetailScreen(
     product: Product,
+    onAddToCart: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var items by rememberSaveable { mutableStateOf(listOf<Parts>()) }
@@ -89,8 +90,7 @@ fun ProductDetailScreen(
                 .padding(horizontal = 20.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-            ) {
+            Column {
                 LazyRow(
                     contentPadding = PaddingValues(vertical = 25.dp),
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -127,7 +127,7 @@ fun ProductDetailScreen(
             }
 
             Button(
-                onClick = {},
+                onClick = { onAddToCart(product) },
                 modifier = modifier
                     .fillMaxWidth()
                     .clip(shape = RoundedCornerShape(5.dp)),
@@ -186,7 +186,8 @@ fun ProductDetailScreenPreview () {
                 89.83,
                 mutableStateOf(false),
                 listOf()
-            )
+            ),
+            onAddToCart = {}
         )
     }
 }
