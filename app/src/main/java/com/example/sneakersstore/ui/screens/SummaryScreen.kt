@@ -21,7 +21,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +29,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -125,6 +123,7 @@ fun OrderSummaryScreen(
                                 DecreaseButton()
                                 Spacer(modifier = modifier.width(9.dp))
                                 Text(text = item.quantity.toString())
+                                Spacer(modifier = modifier.width(9.dp))
                                 IncreaseButton()
                             }
                         }
@@ -145,18 +144,22 @@ fun OrderSummaryScreen(
 
 @Composable
 fun IncreaseButton(modifier: Modifier = Modifier){
-    IconButton(
-        onClick = { },
+    Box(
+        modifier = modifier
+            .clickable { }
+            .size(25.dp)
+            .background(
+                colorResource(R.color.button_color),
+                shape = RoundedCornerShape(5.dp)
+            ),
+        contentAlignment = Alignment.Center
     ) {
         Icon(
             Icons.Default.Add,
-            tint = Color.White,
+            tint = colorResource(R.color.white),
             contentDescription = null,
-            modifier = modifier
-                .background(
-                    colorResource(R.color.button_color),
-                    shape = RoundedCornerShape(5.dp)
-                )
+            modifier = Modifier
+                .size(15.dp)
         )
     }
 }
@@ -166,7 +169,7 @@ fun DecreaseButton(modifier: Modifier = Modifier){
     Box(
         modifier = modifier
             .clickable { }
-            .size(28.dp)
+            .size(25.dp)
             .background(
                 colorResource(R.color.second_color),
                 shape = RoundedCornerShape(5.dp)
@@ -178,8 +181,8 @@ fun DecreaseButton(modifier: Modifier = Modifier){
             tint = colorResource(R.color.decrease_color),
             contentDescription = null,
             modifier = Modifier
-                .width(15.dp)
-                .height(20.dp)
+                .width(12.dp)
+                .height(15.dp)
         )
     }
 }
