@@ -128,6 +128,7 @@ fun ProductDetailScreen(
                onClick = { onAddToCart(product) },
                label = R.string.buy_now,
                modifier = Modifier
+                   .padding(bottom = 20.dp)
                    .fillMaxWidth()
            )
         }

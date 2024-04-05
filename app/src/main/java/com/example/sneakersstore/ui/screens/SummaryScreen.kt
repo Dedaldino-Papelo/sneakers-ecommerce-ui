@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -36,6 +37,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.sneakersstore.Data.DataSource
 import com.example.sneakersstore.R
 import com.example.sneakersstore.models.Product
@@ -49,7 +51,7 @@ fun OrderSummaryScreen(
     modifier: Modifier = Modifier
 ){
     Log.d("shopping", shoppingCart.toString())
-    var selectedValue by rememberSaveable { mutableStateOf(true) }
+    var checkedState by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -67,15 +69,18 @@ fun OrderSummaryScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = false,
-                        onCheckedChange = {  }
+                        checked = checkedState,
+                        onCheckedChange = { checkedState = it },
+                        colors = CheckboxDefaults.colors(
+                            colorResource(R.color.button_color)
+                        )
                     )
 
                     Box(
                         modifier = modifier
                             .size(100.dp)
                             .background(
-                                colorResource(R.color.mid_gray),
+                                colorResource(R.color.second_color),
                                 shape = RoundedCornerShape(8.dp)
                             ),
                         contentAlignment = Alignment.Center
@@ -92,7 +97,8 @@ fun OrderSummaryScreen(
                     Column {
                         Text(
                             text = stringResource(id = item.productName),
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 14.sp
 
                         )
 
@@ -100,7 +106,7 @@ fun OrderSummaryScreen(
 
                         Text(
                             text = stringResource(R.string.size),
-                            color = colorResource(R.color.gray)
+                            color = colorResource(R.color.second_color)
                         )
 
                         Row(
@@ -131,7 +137,7 @@ fun OrderSummaryScreen(
             onClick = {  },
             label = R.string.checkout_button,
             modifier = Modifier
-                .padding(horizontal = 20.dp)
+                .padding(horizontal = 20.dp, vertical = 20.dp)
                 .fillMaxWidth()
         )
     }
@@ -159,7 +165,7 @@ fun IncreaseButton(modifier: Modifier = Modifier){
 fun DecreaseButton(modifier: Modifier = Modifier){
     Box(
         modifier = modifier
-            .clickable {  }
+            .clickable { }
             .size(28.dp)
             .background(
                 colorResource(R.color.second_color),
