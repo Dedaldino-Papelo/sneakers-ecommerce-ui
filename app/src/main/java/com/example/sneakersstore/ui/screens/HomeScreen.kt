@@ -139,9 +139,9 @@ fun ProductItem(
     ) {
         Button(
             onClick = onClick,
-            shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+            shape = RoundedCornerShape(dimensionResource(R.dimen.padding_medium)),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.light_gray)
+                containerColor = colorResource(R.color.second_color)
             )
         ) {
             Column(
@@ -220,7 +220,7 @@ fun BrandItem(modifier: Modifier = Modifier) {
         modifier = modifier
             .size(70.dp)
             .clip(CircleShape)
-            .background(Color.LightGray)
+            .background(colorResource(R.color.second_color))
     )
 }
 

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_corner_radius">18dp</dimen>
+    <dimen name="padding_small">5dp</dimen>
+    <dimen name="padding_medium">18dp</dimen>
+    <dimen name="padding_large">28dp</dimen>
 </resources>

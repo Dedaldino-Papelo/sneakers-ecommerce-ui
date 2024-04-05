@@ -50,7 +50,7 @@ fun SneakersAppBar(
     TopAppBar(
         title = { Text(text = "") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = if(currentScreen.title == R.string.product_details) colorResource(R.color.mid_gray) else Color.Transparent
+            containerColor = if(currentScreen.title == R.string.product_details) colorResource(R.color.second_color) else Color.Transparent
         ),
         modifier = modifier,
         navigationIcon = {

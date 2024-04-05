@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -41,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import com.example.sneakersstore.R
 import com.example.sneakersstore.models.Parts
 import com.example.sneakersstore.models.Product
+import com.example.sneakersstore.ui.components.CustomButton
 import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 import java.text.NumberFormat
 
@@ -73,7 +71,7 @@ fun ProductDetailScreen(
                 .fillMaxWidth()
                 .height(380.dp)
                 .background(
-                    colorResource(R.color.mid_gray),
+                    colorResource(R.color.second_color),
                     shape = RoundedCornerShape(bottomStart = 30.dp, bottomEnd = 30.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -126,17 +124,12 @@ fun ProductDetailScreen(
                 }
             }
 
-            Button(
-                onClick = { onAddToCart(product) },
-                modifier = modifier
-                    .fillMaxWidth()
-                    .clip(shape = RoundedCornerShape(5.dp)),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(R.color.button_color),
-                )
-            ) {
-                Text(text = stringResource(R.string.buy_now).uppercase())
-            }
+           CustomButton(
+               onClick = { onAddToCart(product) },
+               label = R.string.buy_now,
+               modifier = Modifier
+                   .fillMaxWidth()
+           )
         }
     }
 }

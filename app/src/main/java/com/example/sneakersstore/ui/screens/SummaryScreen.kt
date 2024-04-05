@@ -3,6 +3,7 @@ package com.example.sneakersstore.ui.screens
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -40,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.example.sneakersstore.Data.DataSource
 import com.example.sneakersstore.R
 import com.example.sneakersstore.models.Product
+import com.example.sneakersstore.ui.components.CustomButton
 import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 import java.text.NumberFormat
 
@@ -113,12 +113,13 @@ fun OrderSummaryScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Row(
-                                verticalAlignment = Alignment.CenterVertically
+                                modifier = modifier,
+                                verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 DecreaseButton()
+                                Spacer(modifier = modifier.width(9.dp))
                                 Text(text = item.quantity.toString())
                                 IncreaseButton()
-
                             }
                         }
                     }
@@ -126,17 +127,13 @@ fun OrderSummaryScreen(
             }
         }
 
-        Button(
-            onClick = { },
-            modifier = modifier
+        CustomButton(
+            onClick = {  },
+            label = R.string.checkout_button,
+            modifier = Modifier
                 .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(R.color.button_color),
-            )
-        ) {
-            Text(text = stringResource(R.string.checkout_button))
-        }
+                .fillMaxWidth()
+        )
     }
 }
 
@@ -160,18 +157,23 @@ fun IncreaseButton(modifier: Modifier = Modifier){
 
 @Composable
 fun DecreaseButton(modifier: Modifier = Modifier){
-    IconButton(
-        onClick = { },
+    Box(
+        modifier = modifier
+            .clickable {  }
+            .size(28.dp)
+            .background(
+                colorResource(R.color.second_color),
+                shape = RoundedCornerShape(5.dp)
+            ),
+        contentAlignment = Alignment.Center
     ) {
         Icon(
-            Icons.Filled.Add,
-            tint = Color.White,
+            painter = painterResource(id = R.drawable.icons_menos_24),
+            tint = colorResource(R.color.decrease_color),
             contentDescription = null,
-            modifier = modifier
-                .background(
-                    colorResource(R.color.light_gray),
-                    shape = RoundedCornerShape(5.dp)
-                )
+            modifier = Modifier
+                .width(15.dp)
+                .height(20.dp)
         )
     }
 }
