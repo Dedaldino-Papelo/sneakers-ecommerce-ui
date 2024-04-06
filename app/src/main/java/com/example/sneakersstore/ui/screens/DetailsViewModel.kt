@@ -1,6 +1,5 @@
 package com.example.sneakersstore.ui.screens
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.sneakersstore.Data.DetailsUiState
 import com.example.sneakersstore.models.Product
@@ -13,7 +12,7 @@ class DetailsViewModel: ViewModel() {
     private val _uiState = MutableStateFlow(DetailsUiState())
     val uiState: StateFlow<DetailsUiState> = _uiState.asStateFlow()
 
-    fun getProductId(productId: String){
+    fun setProductId(productId: String){
         _uiState.update { currentState ->
             currentState.copy(
                 productId = productId
@@ -36,6 +35,44 @@ class DetailsViewModel: ViewModel() {
                 cart = updatedCart
             )
         }
-        Log.d("cart", _uiState.value.cart.toString())
+    }
+
+    fun increaseQuantity(item: Product){
+        _uiState.update {currentState ->
+            val updateCart = _uiState.value.cart.toMutableList()
+            val productIndex = updateCart.indexOf(item)
+
+            if(productIndex != -1) {
+                val existingProduct = updateCart[productIndex]
+                val updatedProduct = existingProduct.copy( quantity = existingProduct.quantity + 1)
+                updateCart[productIndex] = updatedProduct
+            } else {
+                updateCart.add(item.copy( quantity = 1 ))
+            }
+            currentState.copy(
+                cart = updateCart
+            )
+        }
+    }
+
+    fun decreaseQuantity(item: Product){
+        _uiState.update { currentState->
+            val updateCart = _uiState.value.cart.toMutableList()
+            val productIndex = updateCart.indexOf(item)
+
+            if(productIndex != -1){
+                val existingProduct = updateCart[productIndex]
+                val decreaseQuantity = if(existingProduct.quantity > 1)
+                    existingProduct.copy(quantity = existingProduct.quantity - 1)
+                else existingProduct.copy(quantity = existingProduct.quantity)
+
+                 updateCart[productIndex] = decreaseQuantity
+            }
+
+            currentState.copy(
+                cart = updateCart
+            )
+
+        }
     }
 }

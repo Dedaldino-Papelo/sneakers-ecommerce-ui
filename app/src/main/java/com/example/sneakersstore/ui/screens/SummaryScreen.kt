@@ -46,6 +46,8 @@ import java.text.NumberFormat
 @Composable
 fun OrderSummaryScreen(
     shoppingCart: List<Product>,
+    onIncreaseQuantity: (Product) -> Unit,
+    onDecreaseQuantity: (Product) -> Unit,
     modifier: Modifier = Modifier
 ){
     Log.d("shopping", shoppingCart.toString())
@@ -61,6 +63,12 @@ fun OrderSummaryScreen(
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             shoppingCart.forEach { item ->
+
+                val price = item.productPrice
+                val quantity = item.quantity
+                val totalPrice = price * quantity
+                val totalPriceFormatted = NumberFormat.getCurrencyInstance().format(totalPrice)
+
                 Row(
                     modifier = modifier
                         .padding(horizontal = 20.dp),
@@ -113,18 +121,22 @@ fun OrderSummaryScreen(
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = NumberFormat.getCurrencyInstance().format(item.productPrice),
+                                text = totalPriceFormatted,
                                 fontWeight = FontWeight.Bold
                             )
                             Row(
                                 modifier = modifier,
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                DecreaseButton()
+                                DecreaseButton(
+                                    onClick = { onDecreaseQuantity(item) }
+                                )
                                 Spacer(modifier = modifier.width(9.dp))
                                 Text(text = item.quantity.toString())
                                 Spacer(modifier = modifier.width(9.dp))
-                                IncreaseButton()
+                                IncreaseButton(
+                                    onClick = { onIncreaseQuantity(item) }
+                                )
                             }
                         }
                     }
@@ -143,10 +155,13 @@ fun OrderSummaryScreen(
 }
 
 @Composable
-fun IncreaseButton(modifier: Modifier = Modifier){
+fun IncreaseButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Box(
         modifier = modifier
-            .clickable { }
+            .clickable { onClick() }
             .size(25.dp)
             .background(
                 colorResource(R.color.button_color),
@@ -165,10 +180,13 @@ fun IncreaseButton(modifier: Modifier = Modifier){
 }
 
 @Composable
-fun DecreaseButton(modifier: Modifier = Modifier){
+fun DecreaseButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
     Box(
         modifier = modifier
-            .clickable { }
+            .clickable { onClick() }
             .size(25.dp)
             .background(
                 colorResource(R.color.second_color),
@@ -192,7 +210,9 @@ fun DecreaseButton(modifier: Modifier = Modifier){
 fun OrderSummaryPreview(){
     SneakersStoreTheme {
         OrderSummaryScreen(
-            shoppingCart = DataSource.products
+            shoppingCart = DataSource.products,
+            onIncreaseQuantity = {},
+            onDecreaseQuantity = {}
         )
     }
 }

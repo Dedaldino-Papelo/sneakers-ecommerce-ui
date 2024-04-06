@@ -113,7 +113,7 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
                 HomeScreen(
                     products = DataSource.products,
                     onNextButtonClicked = {
-                        viewModel.getProductId(it.productId)
+                        viewModel.setProductId(it.productId)
                         navController.navigate("${SneakersScreen.Details.name}?${it.productId}")
                     }
                 )
@@ -130,7 +130,9 @@ fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
 
             composable(route = SneakersScreen.Summary.name){
                 OrderSummaryScreen(
-                    shoppingCart = uiState.cart
+                    shoppingCart = uiState.cart,
+                    onIncreaseQuantity = { viewModel.increaseQuantity(it) },
+                    onDecreaseQuantity = { viewModel.decreaseQuantity(it) }
                 )
             }
         }
