@@ -1,6 +1,5 @@
 package com.example.sneakersstore.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,10 +22,8 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -50,8 +47,7 @@ fun OrderSummaryScreen(
     onDecreaseQuantity: (Product) -> Unit,
     modifier: Modifier = Modifier
 ){
-    Log.d("shopping", shoppingCart.toString())
-    var checkedState by rememberSaveable { mutableStateOf(false) }
+    var checkedStates = remember { mutableStateMapOf<Product, Boolean>() }
 
     Column(
         modifier = modifier
@@ -63,6 +59,7 @@ fun OrderSummaryScreen(
             verticalArrangement = Arrangement.spacedBy(25.dp)
         ) {
             shoppingCart.forEach { item ->
+                val isChecked = checkedStates[item] ?: false
 
                 val price = item.productPrice
                 val quantity = item.quantity
@@ -75,8 +72,8 @@ fun OrderSummaryScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = checkedState,
-                        onCheckedChange = { checkedState = it },
+                        checked = isChecked,
+                        onCheckedChange = { checkedStates[item] = it },
                         colors = CheckboxDefaults.colors(
                             colorResource(R.color.button_color)
                         )
