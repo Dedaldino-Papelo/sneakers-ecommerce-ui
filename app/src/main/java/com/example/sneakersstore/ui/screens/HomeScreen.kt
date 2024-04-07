@@ -308,7 +308,10 @@ fun CardImage(modifier: Modifier = Modifier) {
                         containerColor = colorResource(R.color.button_color)
                     )
                 ) {
-                    Text(text = stringResource(R.string.text_shop_button))
+                    Text(
+                        text = stringResource(R.string.text_shop_button),
+                        color = colorResource(R.color.white)
+                    )
                 }
             }
             Image(

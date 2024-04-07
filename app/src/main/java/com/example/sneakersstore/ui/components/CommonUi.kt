@@ -26,6 +26,9 @@ fun CustomButton(
             containerColor = colorResource(R.color.button_color),
         )
     ) {
-        Text(text = stringResource(label).uppercase())
+        Text(
+            text = stringResource(label).uppercase(),
+            color = colorResource(R.color.white)
+        )
     }
 }
