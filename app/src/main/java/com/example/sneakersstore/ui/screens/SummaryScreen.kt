@@ -22,8 +22,6 @@ import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -47,107 +45,123 @@ fun OrderSummaryScreen(
     onDecreaseQuantity: (Product) -> Unit,
     modifier: Modifier = Modifier
 ){
-    var checkedStates = remember { mutableStateMapOf<Product, Boolean>() }
-
-    Column(
-        modifier = modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
+    if(shoppingCart.isEmpty()){
+        EmptyContainer(modifier = modifier.fillMaxSize())
+    } else {
         Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(25.dp)
+            modifier = modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            shoppingCart.forEach { item ->
-                val isChecked = checkedStates[item] ?: false
+            Column(
+                modifier = modifier,
+                verticalArrangement = Arrangement.spacedBy(25.dp)
+            ) {
+                shoppingCart.forEach { item ->
 
-                val price = item.productPrice
-                val quantity = item.quantity
-                val totalPrice = price * quantity
-                val totalPriceFormatted = NumberFormat.getCurrencyInstance().format(totalPrice)
+                    val price = item.productPrice
+                    val quantity = item.quantity
+                    val totalPrice = price * quantity
+                    val totalPriceFormatted = NumberFormat.getCurrencyInstance().format(totalPrice)
 
-                Row(
-                    modifier = modifier
-                        .padding(horizontal = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = item.selected.value,
-                        onCheckedChange = { item.selected.value = it },
-                        colors = CheckboxDefaults.colors(
-                            colorResource(R.color.button_color)
-                        )
-                    )
-
-                    Box(
+                    Row(
                         modifier = modifier
-                            .size(100.dp)
-                            .background(
-                                colorResource(R.color.second_color),
-                                shape = RoundedCornerShape(8.dp)
-                            ),
-                        contentAlignment = Alignment.Center
+                            .padding(horizontal = 20.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            modifier = modifier
-                                .size(80.dp),
-                            painter = painterResource(id = item.productImageRes),
-                            contentDescription = stringResource(item.productName))
-                    }
-
-                    Spacer(modifier = modifier.width(20.dp))
-
-                    Column {
-                        Text(
-                            text = stringResource(id = item.productName),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-
-                        )
-
-                        Spacer(modifier = modifier.height(5.dp) )
-
-                        Text(
-                            text = stringResource(R.string.size),
-                            color = colorResource(R.color.second_color)
-                        )
-
-                        Row(
-                            modifier = modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = totalPriceFormatted,
-                                fontWeight = FontWeight.Bold
+                        Checkbox(
+                            checked = item.selected.value,
+                            onCheckedChange = { item.selected.value = it },
+                            colors = CheckboxDefaults.colors(
+                                colorResource(R.color.button_color)
                             )
+                        )
+
+                        Box(
+                            modifier = modifier
+                                .size(100.dp)
+                                .background(
+                                    colorResource(R.color.second_color),
+                                    shape = RoundedCornerShape(8.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                modifier = modifier
+                                    .size(80.dp),
+                                painter = painterResource(id = item.productImageRes),
+                                contentDescription = stringResource(item.productName)
+                            )
+                        }
+
+                        Spacer(modifier = modifier.width(20.dp))
+
+                        Column {
+                            Text(
+                                text = stringResource(id = item.productName),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp
+
+                            )
+
+                            Spacer(modifier = modifier.height(5.dp) )
+
+                            Text(
+                                text = stringResource(R.string.size),
+                                color = colorResource(R.color.second_color)
+                            )
+
                             Row(
-                                modifier = modifier,
+                                modifier = modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                DecreaseButton(
-                                    onClick = { onDecreaseQuantity(item) }
+                                Text(
+                                    text = totalPriceFormatted,
+                                    fontWeight = FontWeight.Bold
                                 )
-                                Spacer(modifier = modifier.width(9.dp))
-                                Text(text = item.quantity.toString())
-                                Spacer(modifier = modifier.width(9.dp))
-                                IncreaseButton(
-                                    onClick = { onIncreaseQuantity(item) }
-                                )
+                                Row(
+                                    modifier = modifier,
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    DecreaseButton(
+                                        onClick = { onDecreaseQuantity(item) }
+                                    )
+                                    Spacer(modifier = modifier.width(9.dp))
+                                    Text(text = item.quantity.toString())
+                                    Spacer(modifier = modifier.width(9.dp))
+                                    IncreaseButton(
+                                        onClick = { onIncreaseQuantity(item) }
+                                    )
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        CustomButton(
-            onClick = {  },
-            label = R.string.checkout_button,
-            modifier = Modifier
-                .padding(horizontal = 20.dp, vertical = 20.dp)
-                .fillMaxWidth()
-        )
+            CustomButton(
+                onClick = {  },
+                label = R.string.checkout_button,
+                modifier = Modifier
+                    .padding(horizontal = 20.dp, vertical = 20.dp)
+                    .fillMaxWidth()
+            )
+        }
+    }
+}
+
+@Composable
+fun EmptyContainer(modifier: Modifier = Modifier){
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+            Text(
+                text = stringResource(R.string.no_cart_items),
+                fontSize = 20.sp
+            )
     }
 }
 

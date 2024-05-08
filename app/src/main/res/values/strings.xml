@@ -31,4 +31,5 @@
     <string name="checkout_button">Checkout</string>
     <string name="order_summary">Order Summary</string>
     <string name="size">US 6</string>
+    <string name="no_cart_items">Your Cart is Empty.</string>
 </resources>
