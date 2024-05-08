@@ -1,6 +1,8 @@
 package com.example.sneakersstore
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -50,7 +52,9 @@ fun SneakersAppBar(
     TopAppBar(
         title = { Text(text = "") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = if(currentScreen.title == R.string.product_details) colorResource(R.color.second_color) else Color.Transparent
+            containerColor = if(currentScreen.title == R.string.product_details)
+                colorResource(R.color.second_color)
+            else Color.Transparent
         ),
         modifier = modifier,
         navigationIcon = {
@@ -81,60 +85,68 @@ fun SneakersAppBar(
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
-    val navController = rememberNavController()
+    SharedTransitionLayout {
+        val navController = rememberNavController()
 
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = SneakersScreen.valueOf(
-        backStackEntry?.destination?.route ?: SneakersScreen.Start.name
-    )
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentScreen = SneakersScreen.valueOf(
+            backStackEntry?.destination?.route ?: SneakersScreen.Start.name
+        )
 
-    Scaffold(
-        topBar = {
-            SneakersAppBar(
-                navController = navController,
-                currentScreen = currentScreen,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.navigateUp() }
-            )
-        }
-    ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-
-        NavHost(
-            navController = navController,
-            startDestination = SneakersScreen.Start.name,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            composable(route = SneakersScreen.Start.name) {
-                HomeScreen(
-                    products = DataSource.products,
-                    onNextButtonClicked = {
-                        viewModel.setProductId(it.productId)
-                        navController.navigate("${SneakersScreen.Details.name}?${it.productId}")
-                    }
+        Scaffold(
+            topBar = {
+                SneakersAppBar(
+                    navController = navController,
+                    currentScreen = currentScreen,
+                    canNavigateBack = navController.previousBackStackEntry != null,
+                    navigateUp = { navController.navigateUp() }
                 )
             }
-            composable("${SneakersScreen.Details.name}") {
-                val product = DataSource.products.find { it -> it.productId == uiState.productId }
-                if (product != null) {
-                    ProductDetailScreen(
-                        product = product,
-                        onAddToCart = { viewModel.addToCart(it) }
+        ) { innerPadding ->
+            val uiState by viewModel.uiState.collectAsState()
+
+            NavHost(
+                navController = navController,
+                startDestination = SneakersScreen.Start.name,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                composable(route = SneakersScreen.Start.name) {
+                    HomeScreen(
+                        products = DataSource.products,
+                        onNextButtonClicked = {
+                            viewModel.setProductId(it.productId)
+                            navController.navigate("${SneakersScreen.Details.name}?${it.productId}")
+                        },
+                        sharedTransitionScope = this@SharedTransitionLayout,
+                        animatedVisibilityScope = this
+                    )
+                }
+                composable("${SneakersScreen.Details.name}") {
+                    val product = DataSource.products.find { it -> it.productId == uiState.productId }
+                    if (product != null) {
+                        ProductDetailScreen(
+                            product = product,
+                            onAddToCart = { viewModel.addToCart(it) },
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedVisibilityScope = this
+                        )
+                    }
+                }
+
+                composable(route = SneakersScreen.Summary.name){
+                    OrderSummaryScreen(
+                        shoppingCart = uiState.cart,
+                        onIncreaseQuantity = { viewModel.increaseQuantity(it) },
+                        onDecreaseQuantity = { viewModel.decreaseQuantity(it) }
                     )
                 }
             }
-
-            composable(route = SneakersScreen.Summary.name){
-                OrderSummaryScreen(
-                    shoppingCart = uiState.cart,
-                    onIncreaseQuantity = { viewModel.increaseQuantity(it) },
-                    onDecreaseQuantity = { viewModel.decreaseQuantity(it) }
-                )
-            }
         }
     }
+
 }

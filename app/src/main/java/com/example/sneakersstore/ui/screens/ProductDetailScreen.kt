@@ -1,7 +1,10 @@
 package com.example.sneakersstore.ui.screens
 
-import android.annotation.SuppressLint
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,19 +36,20 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.sneakersstore.R
 import com.example.sneakersstore.models.Parts
 import com.example.sneakersstore.models.Product
 import com.example.sneakersstore.ui.components.CustomButton
-import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 import java.text.NumberFormat
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProductDetailScreen(
     product: Product,
     onAddToCart: (Product) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
 ) {
     var items by rememberSaveable { mutableStateOf(listOf<Parts>()) }
@@ -76,10 +80,20 @@ fun ProductDetailScreen(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(id = imageResource),
-                contentDescription = stringResource(id = product.productName)
-            )
+            with(sharedTransitionScope){
+                Image(
+                    painter = painterResource(id = imageResource),
+                    contentDescription = stringResource(id = product.productName),
+                    modifier = modifier
+                        .sharedElement(
+                            state = rememberSharedContentState(key = "image-${product.productId}"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ ->
+                                tween(durationMillis = 1000)
+                            }
+                        )
+                )
+            }
         }
 
         Column(
@@ -166,7 +180,7 @@ fun PartItem(
 }
 
 
-@SuppressLint("UnrememberedMutableState")
+/*@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun ProductDetailScreenPreview () {
@@ -184,4 +198,4 @@ fun ProductDetailScreenPreview () {
             onAddToCart = {}
         )
     }
-}
+}*/

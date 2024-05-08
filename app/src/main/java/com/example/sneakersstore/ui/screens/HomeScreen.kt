@@ -1,6 +1,10 @@
 package com.example.sneakersstore.ui.screens
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -52,19 +56,20 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sneakersstore.Data.DataSource
 import com.example.sneakersstore.R
 import com.example.sneakersstore.models.Product
-import com.example.sneakersstore.ui.theme.SneakersStoreTheme
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     products: List<Product>,
     onNextButtonClicked: (Product) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
 ) {
     var searchText by rememberSaveable { mutableStateOf("") }
@@ -115,7 +120,9 @@ fun HomeScreen(
                                 onClick = { onNextButtonClicked(product) },
                                 onCheckedChange = { isFavorite ->
                                     product.isFavorite.value = isFavorite
-                                }
+                                },
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
                         }
                     }
@@ -125,12 +132,15 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ProductItem(
     product: Product,
     onClick: () -> Unit,
     onCheckedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     Column(
         modifier = modifier
@@ -162,12 +172,21 @@ fun ProductItem(
                     )
                 }
 
-                Image(
-                    painter = painterResource(product.productImageRes),
-                    contentDescription = null,
-                    modifier = modifier
-                        .size(130.dp)
-                )
+                with(sharedTransitionScope){
+                    Image(
+                        painter = painterResource(product.productImageRes),
+                        contentDescription = null,
+                        modifier = modifier
+                            .sharedElement(
+                                state = rememberSharedContentState(key = "image-${product.productId}"),
+                                animatedVisibilityScope = animatedVisibilityScope,
+                                boundsTransform = { _, _ ->
+                                    tween(durationMillis = 1000)
+                                }
+                            )
+                            .size(130.dp)
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
@@ -344,13 +363,16 @@ fun CardImage(modifier: Modifier = Modifier) {
 }
 
 
+/*@OptIn(ExperimentalSharedTransitionApi::class)
 @Preview(showBackground = true)
 @Composable
-fun HomeScreenPreview() {
+fun SharedTransitionScope.HomeScreenPreview() {
     SneakersStoreTheme {
         HomeScreen(
             onNextButtonClicked = {},
-            products = DataSource.products
+            products = DataSource.products,
+            sharedTransitionScope = this,
+            animatedVisibilityScope =
         )
     }
-}
+}*/
