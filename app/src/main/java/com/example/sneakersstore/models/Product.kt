@@ -16,6 +16,7 @@ data class Product(
     @StringRes val productDesc: Int,
     val productPrice: Double,
     var isFavorite: MutableState<Boolean> = mutableStateOf(false),
+    var selected: MutableState<Boolean> = mutableStateOf(false),
     val parts: List<Parts>,
     var quantity: Int = 1
 )

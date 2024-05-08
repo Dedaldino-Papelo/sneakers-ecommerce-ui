@@ -15,6 +15,7 @@ object DataSource {
             R.string.product_desc1,
             89.83,
             mutableStateOf(false),
+            mutableStateOf(false),
             listOf(
                 Parts(
                     "1",
@@ -29,6 +30,7 @@ object DataSource {
             R.string.product_name3,
             R.string.product_desc1,
             70.20,
+            mutableStateOf(false),
             mutableStateOf(false),
             listOf(
                 Parts(
@@ -53,6 +55,7 @@ object DataSource {
             R.string.product_desc1,
             60.2,
             mutableStateOf(false),
+            mutableStateOf(false),
             listOf(
                 Parts(
                     "1",
@@ -67,6 +70,7 @@ object DataSource {
             R.string.product_name2,
             R.string.product_desc1,
             59.2,
+            mutableStateOf(false),
             mutableStateOf(false),
             listOf(
                 Parts(

@@ -72,8 +72,8 @@ fun OrderSummaryScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = isChecked,
-                        onCheckedChange = { checkedStates[item] = it },
+                        checked = item.selected.value,
+                        onCheckedChange = { item.selected.value = it },
                         colors = CheckboxDefaults.colors(
                             colorResource(R.color.button_color)
                         )
