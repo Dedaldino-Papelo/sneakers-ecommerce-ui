@@ -202,10 +202,11 @@ fun ProductItem(
 fun SectionTitle(
     @StringRes title:
     Int, @StringRes
-    link: Int, modifier: Modifier
+    link: Int,
+    modifier: Modifier
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
 

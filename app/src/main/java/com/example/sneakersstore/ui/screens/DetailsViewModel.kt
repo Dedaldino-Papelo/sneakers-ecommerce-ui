@@ -21,7 +21,7 @@ class DetailsViewModel: ViewModel() {
     }
 
     fun addToCart(product: Product) {
-        _uiState.update {currentState ->
+        _uiState.update { currentState ->
             val updatedCart = _uiState.value.cart.toMutableList()
 
             val existingProduct  = updatedCart.find { it -> it.productId == product.productId }
@@ -37,7 +37,7 @@ class DetailsViewModel: ViewModel() {
         }
     }
 
-    fun increaseQuantity(item: Product){
+    fun increaseQuantity(item: Product) {
         _uiState.update {currentState ->
             val updateCart = _uiState.value.cart.toMutableList()
             val productIndex = updateCart.indexOf(item)
