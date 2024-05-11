@@ -52,6 +52,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -148,6 +149,7 @@ fun ProductItem(
             .width(180.dp)
     ) {
         Button(
+            modifier = modifier.testTag("product_item_${product.productId}"),
             onClick = onClick,
             shape = RoundedCornerShape(dimensionResource(R.dimen.padding_medium)),
             colors = ButtonDefaults.buttonColors(
@@ -166,7 +168,7 @@ fun ProductItem(
                     Icon(
                         if(product.isFavorite.value) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                         tint = if(product.isFavorite.value) Color.Red else Color.Black,
-                        contentDescription = null,
+                        contentDescription = stringResource(id = product.productName),
                         modifier = modifier
                             .size(25.dp)
                     )
@@ -257,7 +259,7 @@ fun SearchBar(
             .fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
-        label = { Text(text = "What are you looking for?") },
+        label = { Text(text = stringResource(R.string.search_title)) },
         shape = RoundedCornerShape(50.dp),
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,

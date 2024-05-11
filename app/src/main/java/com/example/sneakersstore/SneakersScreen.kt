@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -69,7 +70,7 @@ fun SneakersAppBar(
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = null
+                        contentDescription = stringResource(R.string.Back_button)
                     )
                 }
             }
@@ -78,7 +79,7 @@ fun SneakersAppBar(
             IconButton(onClick = { navController.navigate(SneakersScreen.Summary.name) }) {
                 Icon(
                     imageVector = Icons.Filled.ShoppingCart,
-                    contentDescription = "Localized description"
+                    contentDescription = stringResource(R.string.shopping_cart)
                 )
             }
         }
@@ -87,9 +88,11 @@ fun SneakersAppBar(
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SneakersApp(viewModel: DetailsViewModel = viewModel()) {
+fun SneakersApp(
+    viewModel: DetailsViewModel = viewModel(),
+    navController: NavHostController = rememberNavController()
+) {
     SharedTransitionLayout {
-        val navController = rememberNavController()
 
         val backStackEntry by navController.currentBackStackEntryAsState()
         val currentScreen = SneakersScreen.valueOf(
