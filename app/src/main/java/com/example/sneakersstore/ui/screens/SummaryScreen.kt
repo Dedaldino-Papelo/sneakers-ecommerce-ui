@@ -125,13 +125,15 @@ fun OrderSummaryScreen(
                                     verticalAlignment = Alignment.CenterVertically,
                                 ) {
                                     DecreaseButton(
-                                        onClick = { onDecreaseQuantity(item) }
+                                        onClick = { onDecreaseQuantity(item) },
+                                        productId = item.productId
                                     )
                                     Spacer(modifier = modifier.width(9.dp))
                                     Text(text = item.quantity.toString())
                                     Spacer(modifier = modifier.width(9.dp))
                                     IncreaseButton(
-                                        onClick = { onIncreaseQuantity(item) }
+                                        onClick = { onIncreaseQuantity(item) },
+                                        productId = item.productId
                                     )
                                 }
                             }
@@ -168,6 +170,7 @@ fun EmptyContainer(modifier: Modifier = Modifier){
 @Composable
 fun IncreaseButton(
     onClick: () -> Unit,
+    productId: String,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -183,7 +186,7 @@ fun IncreaseButton(
         Icon(
             Icons.Default.Add,
             tint = colorResource(R.color.white),
-            contentDescription = null,
+            contentDescription = "product-${productId}",
             modifier = Modifier
                 .size(15.dp)
         )
@@ -193,6 +196,7 @@ fun IncreaseButton(
 @Composable
 fun DecreaseButton(
     onClick: () -> Unit,
+    productId: String,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -208,7 +212,7 @@ fun DecreaseButton(
         Icon(
             painter = painterResource(id = R.drawable.icons_menos_24),
             tint = colorResource(R.color.decrease_color),
-            contentDescription = null,
+            contentDescription = "decrease product-${productId}",
             modifier = Modifier
                 .width(12.dp)
                 .height(15.dp)
